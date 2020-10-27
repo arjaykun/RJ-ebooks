@@ -10,8 +10,8 @@
     "google-spreadsheet": "^3.0.13"
   },
   "scripts": {
-    "devStart": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "devStart": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

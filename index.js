@@ -3,7 +3,7 @@ const express = require('express');
 require('dotenv').config()
 
 const app = express();
-
+const PORT = 3000 || process.env.PORT;
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
@@ -84,4 +84,4 @@ app.delete('/books/:id', async (req,res) => {
 })
 
 
-app.listen(3000, () => console.log('Connected to port 3000'))
+app.listen(PORT, () => console.log('Connected to port ', PORT))
