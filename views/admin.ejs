@@ -1,0 +1,82 @@
+<%- include('layouts/header', {subtitle: 'Home'}) %>
+<section class="section">
+	<article class="message is-success is-hidden" id="success_msg">
+		  <div class="message-body">   
+		  </div>
+	</article>
+	
+	<div class="container is-max-desktop">
+		
+		<div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-between">
+			<h1 class="title has-text-weight-bold">Dashboard</h1>
+			<a href="/books" class="button is-info is-rounded">Add New</a>
+		</div>
+
+		<div class="table-container">
+				
+			<table class="px-2 table is-fullwidth">
+				<tr>
+					<th>Category</th>
+					<th>Title</th>
+					<th class="is-hidden-mobile">Publisher</th>
+					<th class="is-hidden-mobile">Year</th>
+					<th></th>
+				</tr>
+
+				<% books.forEach( (book, index) => {%>
+					<tr>
+						<td><%= book.category %></td>
+						<td><%= book.title %></td>
+						<td class="is-hidden-mobile"><%= book.publisher %></td>
+						<td class="is-hidden-mobile"><%= book.year %></td>
+						<td>
+							<button class="delete is-large" id="<%= index %>"></button>
+						</td>
+					</tr>
+				<% }) %>
+			</table>
+		</div>
+
+	</div>
+</section>
+
+
+<section>
+	<div class="loading is-hidden">
+		<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+	</div>
+</section>
+
+<%- include('layouts/footer') %>
+
+<script>
+
+const delete_btn = document.querySelectorAll('.delete')	
+const loading = document.querySelector('.loading');
+const success_msg = document.querySelector('#success_msg');
+
+
+delete_btn.forEach( del => {
+	del.addEventListener('click', async e => {
+
+	try {
+
+		if (confirm("are you sure, you want you delete this book?")) {
+			const rowIndex = e.target.id;
+			loading.classList.remove('is-hidden');
+			const result = await axios.delete('/books/' + rowIndex);
+			e.target.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode);
+			success_msg.classList.remove('is-hidden');
+			success_msg.children[0].innerHTML = result.data.msg;
+		}
+	}	catch(error) {
+		console.log(error);
+	} finally {
+		loading.classList.add('is-hidden');
+	}
+
+	})
+})
+
+
+</script>

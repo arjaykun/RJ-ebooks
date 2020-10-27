@@ -1,0 +1,32 @@
+<%- include('layouts/header', {subtitle: 'Home'}) %>
+
+<section class="section">
+	<div class="container is-max-desktop ">
+		<h1 class="title">
+			E-book List
+		</h1>
+		<h3 class="subtitle">
+			Please message our facebook page <a href="https://www.facebook.com/GDrive-ITCS-E-Books-Collection-100248191852750" target='_blank' class="link is-primary">here</a> to avail our product.
+		</h3>
+
+		<table class="px-2 table is-fullwidth">
+			<tr>
+				<th>Category</th>
+				<th>Title</th>
+				<th class="is-hidden-mobile">Publisher</th>
+				<th>Year</th>
+			</tr>
+
+			<% books.forEach( book => {%>
+				<tr>
+					<td><%= book.category %></td>
+					<td><%= book.title %></td>
+					<td class="is-hidden-mobile"><%= book.publisher %></td>
+					<td><%= book.year %></td>
+				</tr>
+			<% }) %>
+		</table>
+	</div>
+</section>	
+
+<%- include('layouts/footer') %>

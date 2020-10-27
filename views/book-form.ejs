@@ -1,0 +1,192 @@
+<%- include('layouts/header', {subtitle: 'Add New E-book'}) %>
+
+<section class="section">
+	<div class="container is-max-desktop">
+		
+		<a href="/admin" class="link is-size-4">Back to admin dashboard</a>
+
+		<hr>
+
+		<h1 class="title has-text-weight-bold">Add New E-Book.</h1>
+		<h3 class="subtitle">Input the e-book information required.</h3>
+		<form method="POST"class="px-2 py-5 has-background-white">
+
+			<article class="message is-danger is-hidden" id="err_msg">
+			  <div class="message-body">	
+			  </div>
+			</article>
+
+
+			<article class="message is-success is-hidden" id="success_msg">
+			  <div class="message-body">   
+			  </div>
+			</article>
+
+			<div class="field">
+			  <label class="label">Title</label>
+			  <div class="control">
+			    <input 
+			    	id="title" 
+			    	class="input" 
+			    	type="text" 
+			    	placeholder="e.g Programming 101 for Dummies"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-info">*Required!</strong> Enter the title of the e-book.</p>
+			</div>
+
+			<div class="field">
+			  <label class="label">Publisher</label>
+			  <div class="control">
+			    <input 
+			    	id="publisher" 
+			    	class="input" 
+			    	type="text" 
+			    	placeholder="e.g LCF Publishing, Apress, Packt"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-info">*Required!</strong> Enter the Publishing company of the e-book.</p>
+			</div>
+
+			<div class="field">
+			  <label class="label">Year Published</label>
+			  <div class="control">
+			    <input 
+			    	id="year" 
+			    	class="input" 
+			    	type="text" 
+			    	placeholder="e.g 2018, 2020"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-info">*Required!</strong>Enter the year the E-book was published on.</p>
+			</div>
+
+			<div class="field">
+			  <label class="label">Category</label>
+			  <div class="control">
+			    <input 
+			    	id="category" 
+			    	class="input" 
+			    	type="text" 
+			    	placeholder="e.g Java, Python, DevOps"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-info">*Required!</strong> Enter the category the E-book belongs to.</p>
+			</div>
+
+			<div class="field">
+			  <label class="label">Author</label>
+			  <div class="control">
+			    <input 
+			    	id="author" 
+			    	class="input" 
+			    	type="text"
+			    	placeholder="e.g John Doe, Jane Doe"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-success">*Optional! </strong>If author is multiple, add comma ( , ) to separate them.</p>
+			</div>
+
+			<div class="field">
+			  <label class="label">ISBN</label>
+			  <div class="control">
+			    <input 
+			    	id="ISBN" 
+			    	class="input" 
+			    	type="text" 
+			    	placeholder="e.g Java, Python, DevOps"
+			    >
+			  </div>
+			  <p class="help"><strong class="has-text-success">*Optional! </strong>Enter the unique ISBN of the e-book.</p>
+			</div>
+
+			<div class="control">
+			  <button class="button is-info is-fullwidth" type="submit" id="submit_button">Submit</button>
+			</div>
+
+		</form>
+	</div>
+</section>	
+
+<section>
+	<div class="loading is-hidden">
+		<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+	</div>
+</section>
+
+
+<%- include('layouts/footer')%>
+
+
+<script>
+
+const form = document.querySelector('form');
+//msg alerts
+const error_msg = document.querySelector('#err_msg');
+const success_msg = document.querySelector('#success_msg');
+//get fields
+const title = document.querySelector('#title');
+const publisher = document.querySelector('#publisher');
+const year = document.querySelector('#year');
+const category = document.querySelector('#category');
+const author = document.querySelector('#author');
+const ISBN = document.querySelector('#ISBN');
+const submit_btn = document.querySelector('#submit_button');
+const loading = document.querySelector('.loading');
+
+const addSuccess = msg => {
+	success_msg.classList.remove('is-hidden');
+	success_msg.children[0].innerHTML = msg;
+}
+
+const addError = msg => {
+	error_msg.classList.remove('is-hidden');
+	error_msg.children[0].innerHTML = msg;
+	success_msg.classList.add('is-hidden');
+}
+
+const clear = () => {
+	error_msg.classList.add('is-hidden');
+	success_msg.classList.add('is-hidden');
+
+	title.value = '';
+	publisher.value = '';
+	year.value = '';
+	category.value = '';
+	author.value = '';
+	ISBN.value = '';
+}
+
+const submitForm = async ebook => {
+	try {
+		submit_btn.classList.add('is-loading');
+		loading.classList.remove('is-hidden');
+	 	const result = await axios.post('/books', ebook);
+	 	clear();
+	 	addSuccess(result.data.msg);
+	} catch(error) {
+		addError(error.response.data.msg)
+	} finally {
+		submit_btn.classList.remove('is-loading');
+		loading.classList.add('is-hidden');
+	}
+
+}
+
+form.addEventListener('submit', e => {
+	e.preventDefault();
+	
+	const ebook = {
+		title: title.value,
+		publisher: publisher.value,
+		year: year.value,
+		category: category.value,
+		author: author.value,
+		ISBN: ISBN.value,
+	}
+
+	submitForm(ebook);
+
+})
+
+</script>
